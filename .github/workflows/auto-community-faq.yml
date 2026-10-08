@@ -402,6 +402,7 @@ jobs:
         id: gen
         env:
           REPORT: ${{ runner.temp }}/community-faq-report.md
+          PAIRS: ${{ runner.temp }}/community-faq-pairs.json
           DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: |
           set -e
@@ -417,6 +418,7 @@ jobs:
             --max-items "${{ github.event.inputs.max_items || '3' }}" \
             --min-count "${{ github.event.inputs.min_count || '2' }}" \
             --report "${REPORT}" \
+            --dump-pairs "${PAIRS}" \
             ${APPLY_FLAG}
           code=$?
           set -e
@@ -448,6 +450,17 @@ jobs:
               { echo; echo "---"; echo; cat "${REPORT}"; } >> "$GITHUB_STEP_SUMMARY"
             fi
           fi
+
+      # 无论成功、0 条还是失败，都把本期抓到的问答对原文上传成 artifact，
+      # 这样「模型初选 0 条」时能直接下载排查：到底是该淘汰，还是被误杀。
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: community-faq-pairs-${{ github.run_id }}
+          path: ${{ runner.temp }}/community-faq-pairs.json
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Commit and push
         id: commit

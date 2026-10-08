@@ -832,7 +832,9 @@ PASS1_SYSTEM = """你是 JumpServer（飞致云开源堡垒机）官方文档的
 只输出 JSON，不要任何解释文字。格式：
 {{"items":[{{"question_ids":[12,88],"title":"短标题（疑问句，20 字以内）","question":"一句话问题描述",
 "section":"现有小节标题或null","new_section":"新小节标题或null","kind":"A或C",
-"doc_paths":["installation/xxx.md"],"value":"该主题的长期复用价值属于哪类、为何值得沉淀"}}]}}"""
+"doc_paths":["installation/xxx.md"],"value":"该主题的长期复用价值属于哪类、为何值得沉淀"}}],
+"rejected":[{{"title":"被淘汰的主题（疑问句）","kind":"A/B/C/D","why":"淘汰原因（如：B-页面导航/UI操作；C-文档未说明根因不能猜测；D-疑似Bug无官方确认；与已有条目重复 等）"}}]}}
+说明：rejected 用于自查，把你评估过但决定不收录的主要主题简要列出（最多 8 条即可，不必穷举）；items 为空时尤其要写清楚为什么一条都不收。"""
 
 PASS2_SYSTEM = """你是 JumpServer（飞致云开源堡垒机）官方文档的撰写者。
 任务：基于给定的官方文档原文，写一条「社区常见问题」条目，直接进官方文档，质量要求最高。
@@ -896,7 +898,7 @@ def screen_questions(pairs: list[dict], page: str, index: list[str],
     raw = llm_chat(
         [{"role": "system", "content": PASS1_SYSTEM.format(max_items=max_items)},
          {"role": "user", "content": user}],
-        temperature=0.1, max_tokens=3000,
+        temperature=0.1, max_tokens=4000,
     )
     try:
         payload = json_block(raw)
@@ -904,7 +906,19 @@ def screen_questions(pairs: list[dict], page: str, index: list[str],
         log(f"[community_faq] 第一轮筛选输出无法解析: {err}")
         return []
     items = payload.get("items")
-    return [x for x in items if isinstance(x, dict)] if isinstance(items, list) else []
+    items = [x for x in items if isinstance(x, dict)] if isinstance(items, list) else []
+    # 记录模型淘汰了哪些主题及原因，便于「初选 0 条」时判断是该淘汰还是被误杀
+    rejected = payload.get("rejected")
+    if isinstance(rejected, list) and rejected:
+        log("[community_faq] 模型淘汰 {0} 个主题：".format(len(rejected)))
+        for r in rejected[:12]:
+            if isinstance(r, dict):
+                log("[community_faq]   - [{0}] {1} —— {2}".format(
+                    str(r.get("kind") or "?"), str(r.get("title") or "")[:40],
+                    str(r.get("why") or "")[:80]))
+    elif not items:
+        log("[community_faq] 模型未给出 items 也未给出 rejected，无法判断淘汰原因（可能输出被截断）")
+    return items
 
 
 def compose_entry(item: dict, pairs: list[dict], index: list[str]) -> dict | None:
