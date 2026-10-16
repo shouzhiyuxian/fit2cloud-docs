@@ -97,14 +97,18 @@ docker logs 1panel-ai-gateway
 上游账号主要字段如下表所示。
 
 <div style={{textAlign:"center",color:"#8a8f99",fontSize:"13px",margin:"16px 0 8px"}}>表 1  上游账号主要字段说明</div>
-
-| 字段 | 取值 | 说明 |
-| --- | --- | --- |
-| 供应商 | 内置或自定义 | 内置供应商包含 OpenAI、Anthropic、DeepSeek、阿里云百炼、vLLM 等。 |
-| 协议类型 | 文本 / 文生图 / 向量 | 编辑已有账号时不可直接改变。 |
-| 优先级 | 0-1000 | 网关优先选择优先级更高的可用账号。 |
-| 最大并发 | 0-100000 | 限制该账号同时处理的请求数，0 表示不额外设置。 |
-| 健康状态 | 可用 / 冷却 / 不可用 | 由连接验证和运行时调用结果维护。 |
+<table style={{display:'table', width:'100%', maxWidth:'100%', tableLayout:'fixed', borderCollapse:'collapse', borderSpacing:'0', border:'1px solid #d9dee8'}}>
+<thead>
+<tr><th style={{width:'20%', padding:'8px'}}>字段</th><th style={{width:'25%', padding:'8px'}}>取值</th><th style={{width:'55%', padding:'8px'}}>说明</th></tr>
+</thead>
+<tbody>
+<tr><td style={{padding:'8px'}}>供应商</td><td style={{padding:'8px'}}>内置或自定义</td><td style={{padding:'8px'}}>内置供应商包含 OpenAI、Anthropic、DeepSeek、阿里云百炼、vLLM 等。</td></tr>
+<tr><td style={{padding:'8px'}}>协议类型</td><td style={{padding:'8px'}}>文本 / 文生图 / 向量</td><td style={{padding:'8px'}}>编辑已有账号时不可直接改变。</td></tr>
+<tr><td style={{padding:'8px'}}>优先级</td><td style={{padding:'8px'}}>0-1000</td><td style={{padding:'8px'}}>网关优先选择优先级更高的可用账号。</td></tr>
+<tr><td style={{padding:'8px'}}>最大并发</td><td style={{padding:'8px'}}>0-100000</td><td style={{padding:'8px'}}>限制该账号同时处理的请求数，0 表示不额外设置。</td></tr>
+<tr><td style={{padding:'8px'}}>健康状态</td><td style={{padding:'8px'}}>可用 / 冷却 / 不可用</td><td style={{padding:'8px'}}>由连接验证和运行时调用结果维护。</td></tr>
+</tbody>
+</table>
 
 :::warning[保存校验]
 文本和向量账号在创建或关键连接信息变更时，会执行一次最小调用验证；文生图账号保存时不会实际生成图片。凭据编辑时留空表示沿用已保存的 API Key。
@@ -128,11 +132,11 @@ docker logs 1panel-ai-gateway
 
 ### 3.3 配置用户组
 
-用户组承载模型权限、并发上限和 Token 配额。将用户加入用户组后，用户即可访问该用户组授权的模型。
+用户组承载模型权限、并发上限和 Token Plan。将用户加入用户组后，用户即可访问该用户组授权的模型。
 
 1. 选择 **用户组**，单击 **添加用户组**。
 2. 输入名称，设置组最大并发和单 API Key 最大并发（0 表示不额外限制，继承上一级有效上限）。
-3. 设置 Token 配额，可选择 Token、万、百万、千万、亿、百亿或万亿单位（0 表示不限已知 Token）。
+3. 选择 **Token Plan**（可选），用于限制该组在刷新周期内的 Token 用量上限；留空表示不限制。Token Plan 方案可在用户组页面的「Token Plan」标签中维护。
 4. 在 **授权模型组** 中选择允许访问的模型组；未选择任何模型组时，该用户组可访问全部模型。
 5. 设置启用状态和备注，单击 **保存**。
 
@@ -239,15 +243,19 @@ curl https://gateway.example.com/v1/chat/completions \
 常用数据面接口如下表所示。
 
 <div style={{textAlign:"center",color:"#8a8f99",fontSize:"13px",margin:"16px 0 8px"}}>表 2  数据面接口说明</div>
-
-| 方法 | 路径 | 用途 |
-| --- | --- | --- |
-| GET | `/v1/models` | 列出当前 API Key 可访问的文本模型。 |
-| POST | `/v1/chat/completions` | OpenAI Chat Completions 兼容调用。 |
-| POST | `/v1/responses` | OpenAI Responses 兼容调用。 |
-| POST | `/v1/messages` | Anthropic Messages 兼容调用。 |
-| POST | `/v1/embeddings` | OpenAI Embeddings 兼容调用。 |
-| POST | `/v1/images/generations` | OpenAI Images 兼容文生图调用。 |
+<table style={{display:'table', width:'100%', maxWidth:'100%', tableLayout:'fixed', borderCollapse:'collapse', borderSpacing:'0', border:'1px solid #d9dee8'}}>
+<thead>
+<tr><th style={{width:'15%', padding:'8px'}}>方法</th><th style={{width:'35%', padding:'8px'}}>路径</th><th style={{width:'50%', padding:'8px'}}>用途</th></tr>
+</thead>
+<tbody>
+<tr><td style={{padding:'8px'}}>GET</td><td style={{padding:'8px'}}><code>/v1/models</code></td><td style={{padding:'8px'}}>列出当前 API Key 可访问的文本模型。</td></tr>
+<tr><td style={{padding:'8px'}}>POST</td><td style={{padding:'8px'}}><code>/v1/chat/completions</code></td><td style={{padding:'8px'}}>OpenAI Chat Completions 兼容调用。</td></tr>
+<tr><td style={{padding:'8px'}}>POST</td><td style={{padding:'8px'}}><code>/v1/responses</code></td><td style={{padding:'8px'}}>OpenAI Responses 兼容调用。</td></tr>
+<tr><td style={{padding:'8px'}}>POST</td><td style={{padding:'8px'}}><code>/v1/messages</code></td><td style={{padding:'8px'}}>Anthropic Messages 兼容调用。</td></tr>
+<tr><td style={{padding:'8px'}}>POST</td><td style={{padding:'8px'}}><code>/v1/embeddings</code></td><td style={{padding:'8px'}}>OpenAI Embeddings 兼容调用。</td></tr>
+<tr><td style={{padding:'8px'}}>POST</td><td style={{padding:'8px'}}><code>/v1/images/generations</code></td><td style={{padding:'8px'}}>OpenAI Images 兼容文生图调用。</td></tr>
+</tbody>
+</table>
 
 **认证方式**：通用方式是在 `Authorization` 请求头中使用 Bearer Token。Anthropic Messages 接口也接受 `x-api-key`，使用 `x-api-key` 时不要同时发送 `Authorization`。API Key 前后不能包含空白字符。
 
