@@ -3,6 +3,7 @@
 const sidebars = {
   aiGateway: [
     // ── 根目录：部署与账号接入 ──
+    { type: "doc", id: "product_landing", label: "概览", key: "doc:product_landing" },
     { type: "doc", id: "index", label: "产品介绍" },
     { type: "doc", id: "quick_start", label: "快速入门" },
 
@@ -21,8 +22,10 @@ const sidebars = {
       collapsed: false,
       items: [
         { type: "doc", id: "installation/deployment_instructions", label: "部署说明", key: "installation-deployment" },
+        { type: "doc", id: "installation/offline_installation", label: "离线安装", className: "sidebar-item-badge-rec" },
         { type: "doc", id: "installation/online_installation", label: "在线安装" },
         { type: "doc", id: "installation/1panel_installation", label: "1Panel安装" },
+        { type: "doc", id: "installation/cli", label: "1gctl 命令行工具" },
       ],
     },
     

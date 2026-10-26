@@ -5,6 +5,12 @@ const sidebars = {
   "1panel": [
     {
       "type": "doc",
+      "id": "product_landing",
+      "label": "概览",
+      "key": "doc:product_landing"
+    },
+    {
+      "type": "doc",
       "id": "index",
       "label": "产品介绍"
     },
@@ -863,6 +869,12 @@ const sidebars = {
           "type": "doc",
           "id": "faq/community_faq",
           "label": "常见问题"
+        },
+        {
+          "type": "doc",
+          "id": "faq/runtime-security-upgrade",
+          "label": "PHP 漏洞修复",
+          "className": "sidebar-item-badge-hot"
         },
         {
           "type": "doc",

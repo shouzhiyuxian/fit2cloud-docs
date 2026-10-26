@@ -15,8 +15,8 @@ import styles from './product_landing.module.css';
 
 {/* ===== Hero 区：左侧标题/简介/按钮，右侧视频卡片 ===== */}
 <div className={styles.hero}>
-  <div className={styles.heroLeft}>
-    <h1 className={styles.heroTitle}>JumpServer 堡垒机</h1>
+  <h1 className={styles.heroTitle}>JumpServer 堡垒机</h1>
+  <div className={styles.heroBody}>
     <p className={styles.heroDesc}>
       JumpServer 是广受欢迎的开源堡垒机，是符合 4A 规范的专业运维安全审计系统。帮助企业以更安全的方式管控和登录所有类型的资产，
       实现事前授权、事中监察、事后审计，满足等保合规要求。支持 SSH、Windows、数据库、云服务（Kubernetes / VMware）、
@@ -31,7 +31,7 @@ import styles from './product_landing.module.css';
     </div>
   </div>
   {/* 产品介绍视频：封面为纯 CSS 绿底（沿用视频原海报的绿）+ 白色镂空 logo + 主题词，
-      点击跳转飞致云社区 B 站科普视频 */}
+      右下角叠加播放标识（白底 + 品牌色三角），点击跳转飞致云社区 B 站科普视频 */}
   <Link className={styles.videoCard} to="https://www.bilibili.com/video/BV1hErPYrEsn/">
     <span className={styles.videoCover}>
       <img
@@ -40,6 +40,11 @@ import styles from './product_landing.module.css';
         alt="JumpServer"
       />
       <span className={styles.videoCoverText}>堡垒机是什么</span>
+      <span className={styles.videoCoverPlay} aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M7 5.8v12.4c0 .5.55.8.97.53l9.9-6.2a.62.62 0 0 0 0-1.06l-9.9-6.2A.62.62 0 0 0 7 5.8z" />
+        </svg>
+      </span>
     </span>
     <span className={styles.videoHint}>飞致云开源社区 · 05:22</span>
   </Link>
